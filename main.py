@@ -16,7 +16,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
 
 
+import ctypes
+
+
+def get_free_space_mb(dirname):
+        free_bytes = ctypes.c_ulonglong(0)
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(dirname), None, None, ctypes.pointer(free_bytes))
+        return (free_bytes.value / 1024 / 1024)
+
+
 def main():
+    print("Please in put the name of the drive you want to check the memory \
+of (ex: C)")
+    driveName = str(input())
+    storageSpace1 = get_free_space_mb(driveName + ":\\")
+    print("You have " + str(storageSpace1) + " MB of memory left on this drive")
+    print("Be careful not to over bloat your target drive")
     print("Please input the number of characters you would like in each file \
 as an integer value")
     numChar = int(input())
@@ -33,5 +49,11 @@ an integer value")
         f = open("file" + str(i) + ".txt", "w+")
         f.write(" ".join(lst))
         i += 1
+    storageSpace2 = get_free_space_mb(driveName + ":\\")
+    print("You bloated " + str(storageSpace1 - storageSpace2) + " MB of memory")
+    print("You now have " + str(storageSpace2) + " MB of memory left on this \
+drive")
+    print("Thank you for using this bloater!")
+
 
 main()
