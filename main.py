@@ -17,6 +17,7 @@ SOFTWARE."""
 
 
 import ctypes
+import os
 
 
 def get_free_space_mb(dirname):
@@ -30,30 +31,63 @@ def main():
     print("Please in put the name of the drive you want to check the memory \
 of (ex: C)")
     driveName = str(input())
+    print("")
     storageSpace1 = get_free_space_mb(driveName + ":\\")
-    print("You have " + str(storageSpace1) + " MB of memory left on this drive")
+    print("You have " + str(storageSpace1) + " MB of memory left on \
+this drive")
     print("Be careful not to over bloat your target drive")
+    print("")
     print("Please input the number of characters you would like in each file \
 as an integer value")
     numChar = int(input())
+    print("")
     print("Please input the number of text files you want to create as \
 an integer value")
     numFiles = int(input())
-    i = 1
-    while i < numFiles + 1:
-        q = 1
-        lst = []
-        while q < numChar + 1:
-            lst.append(str(q))
-            q += 1
-        f = open("file" + str(i) + ".txt", "w+")
-        f.write(" ".join(lst))
-        i += 1
-    storageSpace2 = get_free_space_mb(driveName + ":\\")
-    print("You bloated " + str(storageSpace1 - storageSpace2) + " MB of memory")
-    print("You now have " + str(storageSpace2) + " MB of memory left on this \
-drive")
-    print("Thank you for using this bloater!")
+    print("")
+    answer = checkFileSize(numChar, numFiles)
+    if answer == 1:
+        i = 1
+        while i < numFiles + 1:
+            q = 1
+            lst = []
+            while q < numChar + 1:
+                lst.append(str(q))
+                q += 1
+            f = open("file" + str(i) + ".txt", "w+")
+            f.write(" ".join(lst))
+            i += 1
+        storageSpace2 = get_free_space_mb(driveName + ":\\")
+        print("You bloated " + str(storageSpace1 - storageSpace2) + " MB of \
+memory")
+        print("You now have " + str(storageSpace2) + " MB of \
+memory left on this drive")
+        print("Thank you for using this bloater!")
+        input()
+
+
+def checkFileSize(numChar, numFiles):
+    q = 1
+    lst = []
+    while q < numChar + 1:
+        lst.append(str(q))
+        q += 1
+    f = open("file0.txt", "w+")
+    f.write(" ".join(lst))
+    fileSize = (os.stat("file0.txt").st_size) / 1000000
+    print("You will be creating " + str(numFiles) + " files each \
+with " + str(numChar) + " characters")
+    print("This will use up approximately " + str(fileSize) + " MB of \
+memory per file and about " + str(numFiles * fileSize) + " MB of memory total")
+    print("Is this ok (y/n)")
+    answer = str(input())
+    print("")
+    if answer == "n":
+        return 0
+    elif answer == "y":
+        print("Continuing...")
+        print("")
+        return 1
 
 
 main()
